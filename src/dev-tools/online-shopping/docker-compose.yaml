@@ -1,0 +1,8 @@
+services:
+  online-shopping:
+    container_name: online-shopping-postgres
+    image: postgres:15
+    ports:
+      - "5434:5433"
+    environment:
+      POSTGRES_PASSWORD: 2201
