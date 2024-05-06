@@ -1,8 +1,13 @@
 services:
-  online-shopping:
+  online-shopping-postgres:
     container_name: online-shopping-postgres
     image: postgres:15
     ports:
       - "5434:5433"
     environment:
       POSTGRES_PASSWORD: 2201
+  online-shopping-redis:
+    container_name: online-shopping-redis
+    image: redis:7.2.4
+    ports:
+      - "6379:6379"
