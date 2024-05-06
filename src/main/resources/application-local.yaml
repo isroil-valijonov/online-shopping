@@ -10,3 +10,15 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+online-shopping:
+  otp:
+    retry-wait-time: 5 #1 seconds
+    retry-count: 3
+    time-to-live: 60 # seconds
+  notification:
+    sms:
+      eskiz: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTc1OTQ4NTksImlhdCI6MTcxNTAwMjg1OSwicm9sZSI6InVzZXIiLCJzaWduIjoiYTM5NWJiYmQzM2U3N2Q0ZjQ5ZWNmZjYyMTcyMWQ1MTJhOGRlODYwYjhmNDU5MWQwMTdjYzk0MjI2MThmZjRlNiIsInN1YiI6IjQxMzUifQ.Eb1dNIpLMcmmOdRgfbQZFB2WN2QgSI2wlXThXmo2nlg
+  security:
+    token:
+      expiration: 86400
+      secret: l8ZQttgCIuDp7OmZXNmpwEV9/iPCcpwzbcpcwWCxsBRQp1SsYkqcHirUm/wgfqV2
