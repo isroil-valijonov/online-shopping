@@ -27,12 +27,12 @@ public class OtpException extends RuntimeException{
         }
 
     }
-//    public static class PhoneNumberNotVerified extends OtpException {
-//        static private String MESSAGE = "Pone Number: %s is not verified";
-//
-//        public PhoneNumberNotVerified(String phoneNumber) {
-//            super(String.format(MESSAGE, phoneNumber));
-//        }
-//    }
+    public static class PhoneNumberNotVerified extends OtpException {
+        static private String MESSAGE = "Pone Number: %s is not verified";
+
+        public PhoneNumberNotVerified(String phoneNumber) {
+            super(String.format(MESSAGE, phoneNumber));
+        }
+    }
 
 }

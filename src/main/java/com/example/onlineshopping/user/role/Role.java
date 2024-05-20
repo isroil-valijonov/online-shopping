@@ -3,7 +3,7 @@ package com.example.onlineshopping.user.role;
 import com.example.onlineshopping.user.permission.Permission;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 
 import java.util.List;
@@ -44,13 +44,13 @@ public enum Role {
     @Getter
     private final Set<Permission> permissions;
 
-//    public List<SimpleGrantedAuthority> getAuthorities() {
-//        var authorities = getPermissions()
-//                .stream()
-//                .map(authority -> new SimpleGrantedAuthority(authority.getPermission()))
-//                .collect(Collectors.toList());
-//        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
-//        return authorities;
-//    }
+    public List<SimpleGrantedAuthority> getAuthorities() {
+        var authorities = getPermissions()
+                .stream()
+                .map(authority -> new SimpleGrantedAuthority(authority.getPermission()))
+                .collect(Collectors.toList());
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.name()));
+        return authorities;
+    }
 
 }
