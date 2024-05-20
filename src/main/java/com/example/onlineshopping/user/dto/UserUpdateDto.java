@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,6 +14,7 @@ public class UserUpdateDto {
 
     private String firstName;
     private String lastName;
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
     private String phoneNumber;
+    private String password;
 }
