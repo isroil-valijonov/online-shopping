@@ -1,5 +1,6 @@
 package com.example.onlineshopping.comment;
 
+import com.example.onlineshopping.category.dto.CategoryResponseDto;
 import com.example.onlineshopping.comment.dto.AllCommentResponseDto;
 import com.example.onlineshopping.comment.dto.CommentCreateDto;
 import com.example.onlineshopping.comment.dto.CommentResponseDto;
@@ -20,12 +21,12 @@ import java.util.UUID;
 public class CommentController {
     private final CommentService commentService;
     @PostMapping("/create")
-    public ResponseEntity<CommentResponseDto> create(@RequestBody CommentCreateDto commentCreateDto) throws Exception {
+    public ResponseEntity<AllCommentResponseDto> create(@RequestBody CommentCreateDto commentCreateDto) throws Exception {
 
-        CommentResponseDto commentResponseDto = commentService.create(commentCreateDto);
+        AllCommentResponseDto responseDto = commentService.create(commentCreateDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(commentResponseDto);
+                .body(responseDto);
     }
 
     @PutMapping("/update/{commentId}")
@@ -44,6 +45,15 @@ public class CommentController {
                 .body(delete);
     }
 
+    @GetMapping("/find-by-id/{id}")
+    public ResponseEntity<CategoryResponseDto> findByCommentId(@PathVariable UUID id){
+        CategoryResponseDto categoryResponseDto = commentService.commentFindById(id);
+        System.out.println(categoryResponseDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoryResponseDto);
+    }
+
     @GetMapping("/all-comment-by-user-id/{id}")
     public ResponseEntity<List<AllCommentResponseDto>> allCommentByUserId(@PathVariable UUID id){
         List<AllCommentResponseDto> allComment = commentService.allCommentsByUserId(id);
@@ -51,6 +61,7 @@ public class CommentController {
                 .status(HttpStatus.OK)
                 .body(allComment);
     }
+
     @GetMapping("/all-comment-by-book-id/{id}")
     public ResponseEntity<List<AllCommentResponseDto>> allCommentByBookId(@PathVariable UUID id){
         List<AllCommentResponseDto> allComment = commentService.allCommentByBookId(id);

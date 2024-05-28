@@ -9,6 +9,6 @@ public class NoSmsNotificationImplService implements SmsNotificationService{
 
     @Override
     public void sendNotification (String phoneNumber, String message) {
-        System.out.printf("%s: %s: \n",phoneNumber,message);
+        System.out.printf("%s: %s \n",phoneNumber,message);
     }
 }

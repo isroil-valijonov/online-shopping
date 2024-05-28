@@ -1,5 +1,6 @@
 package com.example.onlineshopping.otp.service;
 
+import com.example.onlineshopping.common.exceptions.CustomException;
 import com.example.onlineshopping.common.exceptions.OtpException;
 import com.example.onlineshopping.common.response.CommonResponse;
 import com.example.onlineshopping.notification.sms.service.SmsNotificationService;
@@ -30,9 +31,8 @@ public class OtpService {
     private int retryCount;
     @Value("${online-shopping.otp.time-to-live}")
     private int timeToLive;
-    private final String VERIFICATION_MESSAGE = "Your verification code is: %d%n";
+    private final String VERIFICATION_MESSAGE = "Your verification code is: ";
     private final SmsNotificationService smsNotificationService;
-    private final JwtService jwtService;
 
     @Transactional
     public CommonResponse sendSms(ValidatePhoneNumberRequestDto requestDto) {
@@ -51,14 +51,14 @@ public class OtpService {
         }
 
         OTP otp = existingOtp
-                .orElseThrow(() -> new EntityNotFoundException("we didn't send you any verification code"));
+                .orElseThrow(() -> new CustomException("We didn't send you any verification code", HttpStatus.BAD_REQUEST.value()));
 
         if (otp.getCode() == requestDto.getOtp()) {
             otp.setVerified(true);
             otpRepository.save(otp);
             return new CommonResponse("Otp was successfully verified", LocalDateTime.now(), HttpStatus.OK.value());
         } else {
-            return new CommonResponse("Otp was incorrect", LocalDateTime.now(), HttpStatus.BAD_REQUEST.value());
+            return new CommonResponse("Sms code is incorrect", LocalDateTime.now(), HttpStatus.BAD_REQUEST.value());
         }
     }
 
@@ -80,13 +80,13 @@ public class OtpService {
 
     private OTP sendSmsInternal(String phoneNumber) {
         int code = random.nextInt(100000, 999999);
-        smsNotificationService.sendNotification(phoneNumber, VERIFICATION_MESSAGE.formatted(code));
+        smsNotificationService.sendNotification(phoneNumber, VERIFICATION_MESSAGE + code);
         return new OTP(phoneNumber, code, LocalDateTime.now(), 1, LocalDateTime.now(),false);
     }
 
     private OTP sendSmsInternal(OTP otp) {
         int code = random.nextInt(100000, 999999);
-        smsNotificationService.sendNotification(otp.getPhoneNumber(), VERIFICATION_MESSAGE.formatted(code));
+        smsNotificationService.sendNotification(otp.getPhoneNumber(), VERIFICATION_MESSAGE + code);
         otp.setCode(code);
         otp.setLastSentTime(LocalDateTime.now());
         otp.setSentCount(otp.getSentCount() + 1);

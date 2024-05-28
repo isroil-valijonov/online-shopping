@@ -20,6 +20,7 @@
   2.Category Update
   3.Category Delete
   4.All Category
+  5.Category find by id
 
 4.CommentService
   1.Comment Create
@@ -27,4 +28,5 @@
   3.All Comment find by Book id
   4.Comment Update
   5.Comment Delete
+  6.Comment find by id
 

@@ -9,11 +9,12 @@ import com.example.onlineshopping.category.dto.CategoryUpdateDto;
 import com.example.onlineshopping.category.entity.Category;
 import com.example.onlineshopping.category.mapper.CategoryModelMapper;
 import com.example.onlineshopping.category.repository.CategoryRepository;
+import com.example.onlineshopping.common.exceptions.CustomException;
 import com.example.onlineshopping.common.response.CommonResponse;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,19 +28,22 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final CategoryModelMapper categoryModelMapper;
     private final BookRepository bookRepository;
 
     public CategoryResponseDto create(CategoryCreateDto categoryCreateDto) {
 
-        Category category = new Category();
-        Category byName = categoryRepository.findByName(categoryCreateDto.getName());
-        if (byName != null) {
-            throw new RuntimeException("Category name must be unique");
+        try {
+            Optional<Category> optionalCategory = categoryRepository.findByName(categoryCreateDto.getName());
+            if (optionalCategory.isPresent()) {
+                throw new DuplicateKeyException("This category already exists");
+            }
+            Category category = new Category();
+            category.setName(categoryCreateDto.getName());
+            categoryRepository.save(category);
+            return mapToDto(category);
+        } catch (Exception e){
+            throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
         }
-        category.setName(categoryCreateDto.getName());
-        categoryRepository.save(category);
-        return categoryModelMapper.toResponse(category);
 
     }
 
@@ -48,7 +52,6 @@ public class CategoryService {
         List<Book> bookList = bookRepository.getBookListByCategoryId(id);
 
         if (bookList.size() != 0){
-            System.out.println(bookList);
             return new CommonResponse("Failed to delete category", LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
 
@@ -66,25 +69,32 @@ public class CategoryService {
         return new CategoryAllResponseDto(categoryResponseDto);
     }
 
-
-
-
-
     public CategoryResponseDto update(CategoryUpdateDto categoryUpdateDto) {
         try {
-            Optional<Category> optionalCategory = categoryRepository.findById(categoryUpdateDto.getId());
+            Optional<Category> optionalCategory = categoryRepository.findByName(categoryUpdateDto.getName());
             if (optionalCategory.isPresent()) {
-                Category category = optionalCategory.get();
-                category.setName(categoryUpdateDto.getName());
-                categoryRepository.save(category);
-                return mapToDto(category);
-            } else {
-                throw new NoSuchElementException("Category not found");
+                throw new DuplicateKeyException("Category name must be unique");
             }
+            Category category = categoryRepository.findById(categoryUpdateDto.getId()).orElseThrow(() -> new CustomException("Category not found"));
+            category.setName(categoryUpdateDto.getName());
+            categoryRepository.save(category);
+            return mapToDto(category);
         } catch (Exception e) {
-            throw new RuntimeException("Failed to update category", e);
+            throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
         }
     }
+
+
+    public CategoryResponseDto getCategoryById(UUID id) {
+        try {
+            Category category = categoryRepository.findById(id)
+                    .orElseThrow(() -> new CustomException("Category with id " + id + " not found", HttpStatus.NOT_FOUND.value()));
+            return mapToDto(category);
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage(), HttpStatus.NOT_FOUND.value());
+        }
+    }
+
 
     private CategoryResponseDto mapToDto(Category category) {
         return new CategoryResponseDto(category.getId(), category.getName());
