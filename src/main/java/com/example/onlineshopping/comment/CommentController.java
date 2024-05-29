@@ -48,10 +48,16 @@ public class CommentController {
     @GetMapping("/find-by-id/{id}")
     public ResponseEntity<CategoryResponseDto> findByCommentId(@PathVariable UUID id){
         CategoryResponseDto categoryResponseDto = commentService.commentFindById(id);
-        System.out.println(categoryResponseDto);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(categoryResponseDto);
+    }
+    @GetMapping("/all-comment")
+    public ResponseEntity<List<AllCommentResponseDto>> allComments(){
+        List<AllCommentResponseDto> allCommentResponseDto = commentService.allComment();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(allCommentResponseDto);
     }
 
     @GetMapping("/all-comment-by-user-id/{id}")

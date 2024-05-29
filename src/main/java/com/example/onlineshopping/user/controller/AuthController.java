@@ -36,11 +36,8 @@ public class AuthController {
     @PostMapping("/api/v1/sign-up")
     public ResponseEntity<UserResponseDto> signUp(@RequestBody @Valid UserCreateDto userCreateDto) {
         UserResponseDto userResponseDto = userService.create(userCreateDto);
-        String token = jwtService.generateToken(userResponseDto.getPhoneNumber());
-        userResponseDto.setToken(token);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                 .body(userResponseDto);
     }
 

@@ -3,10 +3,12 @@ package com.example.onlineshopping.book.controller;
 import com.example.onlineshopping.book.dto.*;
 import com.example.onlineshopping.book.service.BookService;
 import com.example.onlineshopping.common.response.CommonResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/book")
+@Validated
 public class BookController {
     private final BookService bookService;
 

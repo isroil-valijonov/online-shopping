@@ -130,6 +130,16 @@ public class CommentService {
             throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
         }
     }
+    public List<AllCommentResponseDto> allComment () {
+        try {
+            List<Comment> all = commentRepository.findAll();
+            return all.stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        } catch (Exception e){
+            throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
+        }
+    }
 
     private AllCommentResponseDto convertToDto(Comment comment) {
         return new AllCommentResponseDto(

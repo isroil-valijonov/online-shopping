@@ -3,6 +3,7 @@ package com.example.onlineshopping.user.controller;
 import com.example.onlineshopping.common.response.CommonResponse;
 import com.example.onlineshopping.user.dto.*;
 import com.example.onlineshopping.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserResponseDto> update(@PathVariable UUID id, @RequestBody UserUpdateDto userUpdateDto){
+    public ResponseEntity<UserResponseDto> update(@PathVariable UUID id, @RequestBody @Valid UserUpdateDto userUpdateDto){
 
         return userService.update(id, userUpdateDto);
     }

@@ -48,17 +48,23 @@ public class CategoryService {
     }
 
     public CommonResponse delete(UUID id) {
-
         List<Book> bookList = bookRepository.getBookListByCategoryId(id);
-
-        if (bookList.size() != 0){
-            return new CommonResponse("Failed to delete category", LocalDateTime.now(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        try {
+            categoryRepository.findById(id).orElseThrow(
+                    () -> new CustomException("Category not found: " + id, HttpStatus.NOT_FOUND.value())
+            );
+            if (bookList.size() != 0) {
+                for (Book book : bookList) {
+                    book.setCategory(null);
+                    bookRepository.save(book);
+                }
+            }
+            categoryRepository.deleteById(id);
+            return new CommonResponse("Category has been deleted", LocalDateTime.now(), HttpStatus.OK.value());
+        } catch (Exception e) {
+            throw new CustomException(e.getMessage(), HttpStatus.BAD_REQUEST.value());
         }
-
-        categoryRepository.deleteById(id);
-        return new CommonResponse("Category has been deleted", LocalDateTime.now(), HttpStatus.OK.value());
     }
-
 
     public CategoryAllResponseDto getAllCategory() {
         List<Category> categories = categoryRepository.findAll();
