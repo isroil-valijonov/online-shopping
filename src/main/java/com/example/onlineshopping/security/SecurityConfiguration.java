@@ -9,6 +9,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
@@ -20,9 +21,9 @@ public class SecurityConfiguration {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         registry -> registry
-                                .requestMatchers("/user/api/v1/auth/**","api/v1/auth/sign-in", "/api/v1/auth/sign-up")
+                                .requestMatchers("/auth/api/v1/**", "/auth/api/v1/validate")
                                 .permitAll()
-                                .requestMatchers("/book/**", "/category/**")
+                                .requestMatchers("/book/**", "/category/**", "/comment/**")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

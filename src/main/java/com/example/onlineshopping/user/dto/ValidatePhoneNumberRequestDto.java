@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ValidatePhoneNumberRequestDto {
     @NotBlank
-    @Pattern(regexp = "^998[0-9]{9}$")
+    @Pattern(regexp = "^998([378]{2}|(9[013-57-9]))\\d{7}$")
     private String phoneNumber;
     private Integer otp;
 }

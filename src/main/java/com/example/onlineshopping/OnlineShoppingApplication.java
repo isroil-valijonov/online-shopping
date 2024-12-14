@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
+
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableRedisRepositories
@@ -14,6 +15,8 @@ public class OnlineShoppingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OnlineShoppingApplication.class, args);
+
 	}
+
 
 }

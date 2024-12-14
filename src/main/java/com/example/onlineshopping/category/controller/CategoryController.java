@@ -20,12 +20,11 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping("/create")
-    public CategoryResponseDto create(@RequestBody CategoryCreateDto categoryCreateDto){
+    public ResponseEntity<CategoryResponseDto> create(@RequestBody CategoryCreateDto categoryCreateDto){
         CategoryResponseDto category = categoryService.create(categoryCreateDto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(category)
-                .getBody();
+                .body(category);
     }
 
     @PutMapping("/update")
@@ -42,7 +41,15 @@ public class CategoryController {
                 .status(HttpStatus.OK)
                 .body(allCategory);
     }
-    @DeleteMapping("/{id}")
+    @GetMapping("/find-by-category-id/{id}")
+    public ResponseEntity<CategoryResponseDto> findByCategoryId(@PathVariable UUID id){
+        CategoryResponseDto category = categoryService.getCategoryById(id);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(category);
+    }
+
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<CommonResponse> delete(@PathVariable UUID id){
         System.out.println(id);
         CommonResponse categoryDelete = categoryService.delete(id);
